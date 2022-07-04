@@ -13,7 +13,6 @@ Escriba el resultado a la carpeta `output` de directorio de trabajo.
 
         >>> Escriba su respuesta a partir de este punto <<<
 */
-
 DROP TABLE IF EXISTS docs;
 DROP TABLE IF EXISTS word_counts;
 
@@ -23,12 +22,14 @@ LOAD DATA LOCAL INPATH "data.tsv" OVERWRITE INTO TABLE docs;
 
 CREATE TABLE word_counts
 AS
-    SELECT word, count(1) AS count
-    FROM
+    SELECT word, count(1) AS count FROM
         (SELECT split(line, '\t')[0] AS word FROM docs) w
 GROUP BY
     word
 ORDER BY
     word;
 
+INSERT OVERWRITE LOCAL DIRECTORY 'output'
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
 SELECT * FROM word_counts;
+
